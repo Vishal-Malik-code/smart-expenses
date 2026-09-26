@@ -79,3 +79,7 @@ Date,Amount,Category,Description
 - Recurring expenses
 - Custom categories
 - Deployment to Streamlit Community Cloud
+
+## Author
+
+**Vishal Malik** · [GitHub](https://github.com/Vishal-Malik-code)
