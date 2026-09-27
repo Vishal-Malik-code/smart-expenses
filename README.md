@@ -34,7 +34,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-The app opens at http://localhost:8501. The database file (`expenses.db`) is created automatically on first run.
+The app opens at http://localhost:8501. The database file (`expenses.db`) is created automatically on first run. A brand-new database starts with a set of demo expenses and a sample budget so the dashboard isn't empty; delete them anytime and they won't come back.
 
 ## Project structure
 

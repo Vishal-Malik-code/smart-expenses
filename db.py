@@ -2,6 +2,7 @@
 
 import sqlite3
 from contextlib import closing
+from datetime import date, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -49,6 +50,33 @@ def _table(sql, params=()):
 def init_db():
     with closing(_connect()) as conn, conn:
         conn.executescript(SCHEMA)
+    _seed_demo_data()
+
+
+# (days ago, amount, category, description), used to fill a brand-new database
+DEMO_EXPENSES = [
+    (0, 180, "Food", "Lunch with friends"), (1, 60, "Travel", "Metro card recharge"),
+    (2, 1200, "Shopping", "New headphones"), (3, 250, "Food", "Groceries"),
+    (4, 799, "Bills", "Internet bill"), (6, 90, "Food", "Coffee and snacks"),
+    (8, 450, "Health", "Pharmacy"), (10, 320, "Travel", "Cab to airport"),
+    (12, 2100, "Shopping", "Shoes"), (15, 150, "Food", "Dinner"),
+    (18, 1500, "Bills", "Electricity bill"), (21, 700, "Health", "Gym membership"),
+    (25, 380, "Food", "Weekend brunch"), (28, 240, "Travel", "Train tickets"),
+    (33, 1800, "Shopping", "Clothes"), (38, 850, "Bills", "Phone recharge"),
+    (42, 120, "Other", "Stationery"), (47, 600, "Food", "Party takeout"),
+    (55, 950, "Travel", "Bus trip"), (62, 300, "Other", "Gift"),
+]
+
+
+def _seed_demo_data():
+    """Give a brand-new database some demo data. Runs once, so deleting it later sticks."""
+    if _run("SELECT 1 FROM settings WHERE key = 'seeded'"):
+        return
+    if not _run("SELECT 1 FROM expenses LIMIT 1"):  # only if the user has no data yet
+        today = date.today()
+        add_many((str(today - timedelta(days=ago)), amt, cat, desc) for ago, amt, cat, desc in DEMO_EXPENSES)
+        set_budget(8000)
+    _run("INSERT INTO settings (key, value) VALUES ('seeded', '1')")
 
 
 # ---- Create ------------------------------------------------------------------
